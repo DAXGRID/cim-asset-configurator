@@ -1,10 +1,7 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 
-const electron = window.require('electron');
-const fs = electron.remote.require('fs');
-
-const root = fs.readFileSync('./../asset-schema.json', 'UTF8');
+import SideMenu from './components/side-menu';
 
 function App() {
   return (
@@ -15,7 +12,7 @@ function App() {
         </header>
 
         <menu className="menu">
-          Menu
+          <SideMenu />
         </menu>
 
         <main className="main">

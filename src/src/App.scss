@@ -1,0 +1,25 @@
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'header header header header header header header'
+    'menu main main main main main main'
+    'menu main main main main main main';
+}
+
+.header {
+  grid-area: header;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 10px;
+}
+
+.menu {
+  grid-area: menu;
+  margin-top: 0;
+  padding-left: 10px;
+  border-right: 1px solid #e6e6e6;
+}
+
+.main {
+  grid-area: main;
+  padding: 10px 5px 5px 5px;
+}
