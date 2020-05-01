@@ -1,4 +1,5 @@
 import React from 'react';
+import MenuItem from '../menu-item';
 
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
@@ -6,36 +7,30 @@ const fs = electron.remote.require('fs');
 const assetSchemaJson = fs.readFileSync('./../asset-schema.json', 'UTF8');
 const schema = JSON.parse(assetSchemaJson);
 
-const namespaces = () => {
-    return schema.namespaces.map((x, i) => {
+const getNamespaces = () => {
+    return schema.namespaces.map((namespace) => {
+        let clonedNamespace = JSON.parse(JSON.stringify(namespace));
 
-        x.entities = x.entities.filter((y) => {
-            return !(isPrimitiveType(y));
+        clonedNamespace.entities = namespace.entities.filter((entity) => {
+            return !(isPrimitiveType(entity));
         });
 
-        if (x.id && x.entities && x.entities.length > 0)
-            return <li key={i}>{x.id} <ul>{entities(x)}</ul></li>;
+        if (!clonedNamespace.entities)
+            return null;
+        
+        return clonedNamespace;
     });
 }
 
-const entities = (namespace) => {
-    return namespace.entities.map((x) => {
-        return <li title={x.description} key={x.id}>{x.name} <ul>{attributes(x)}</ul></li>;
-    });
-}
-
-const attributes = (entity) => {
-    return entity.attributes.map((x, i) => {
-        return <li title={x.description} key={i}>{x.name}</li>;
-    });
-}
-
-const isPrimitiveType = (x) => {
-        if (x.stereoType === 'Compound'
-            || x.stereoType === 'CIMDatatype'
-            || x.stereoType === 'enumeration'
-            || x.stereoType === 'Primitive')
-            return true;
+const isPrimitiveType = (entity) => {
+    if (
+        entity.stereoType === 'Compound' || 
+        entity.stereoType === 'CIMDatatype' ||
+        entity.stereoType === 'enumeration' ||
+        entity.stereoType === 'Primitive'
+    ) {
+        return true;
+    }
 
     return false;
 }
@@ -44,7 +39,9 @@ const SideMenu = () => {
     return (
         <div className="side-menu">
           <ul className="tree-view">
-            {namespaces()}
+            {getNamespaces().map((x, i) => {
+                return <MenuItem key={i} namespace={x} />;
+            })}
           </ul>
         </div>
     );
