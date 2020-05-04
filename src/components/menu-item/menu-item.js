@@ -8,21 +8,34 @@ const getNamespace = (x) => {
 
 const entities = (namespace) => {
   return namespace.entities.map((x, index) => {
+    let entities = [];
+    addNode(x, entities);
 
-    let elements = null;
-    let currentEntity = x;
+    return (
+      <ul key={index}>
+        {entities.map((x) => {
+          return entityElement(x);
+        })}
+      </ul>
+    );
+  });
+}
 
-    while (currentEntity !== null) {
-      elements += entityElement(currentEntity);
-      currentEntity = null;
-    }
 
-    return <ul key={index}>{elements}</ul>;
+
+function addNode(node, nodes) {
+  nodes.push(node);
+  node.derivedEntities.forEach((x) => {
+    addNode(x, nodes);
   });
 }
 
 const entityElement = (entity) => {
-  return <li title={entity.description} key={entity.id}>{entity.name}<ul>{attributes(entity)}</ul></li>;
+  return (
+    <li title={entity.description} key={entity.id}>{entity.name}
+      <ul>{attributes(entity)}</ul>
+    </li>
+  );
 }
 
 const attributes = (entity) => {
