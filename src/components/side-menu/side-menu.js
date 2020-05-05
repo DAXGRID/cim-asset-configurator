@@ -8,7 +8,7 @@ const assetSchemaJson = fs.readFileSync('./asset-schema.json', 'UTF8');
 const schema = JSON.parse(assetSchemaJson);
 
 const getNamespaces = () => {
-  return schema.namespaces.map((namespace) => {
+  const namespaces = schema.namespaces.map((namespace) => {
     let clonedNamespace = JSON.parse(JSON.stringify(namespace));
 
     clonedNamespace.entities = namespace.entities.filter((entity) => {
@@ -19,6 +19,16 @@ const getNamespaces = () => {
       return null;
 
     return clonedNamespace;
+  });
+
+  return namespaces;
+}
+
+const flattenDerivedEntities = (node, nodes) => {
+  nodes.push(node);
+
+  node.derivedEntities.forEach((x) => {
+    flattenDerivedEntities(x, nodes);
   });
 }
 
@@ -35,12 +45,46 @@ const isPrimitiveType = (entity) => {
   return false;
 }
 
+const getPackages = () => {
+  const namespaces = getNamespaces();
+
+  let entities = [];
+  namespaces.forEach((namespace) => {
+    if (!namespace.name)
+      return;
+
+    namespace.entities.forEach((entity) => {
+      flattenDerivedEntities(entity, entities);
+    });
+  });
+
+  const packages = sortEntitiesByNamespaces(entities);
+
+  return packages;
+}
+
+const sortEntitiesByNamespaces = (entities) => {
+  let packages = {};
+
+  entities.forEach((x) => {
+    if (!packages[x.packageName])
+      packages[x.packageName] = [];
+
+    packages[x.packageName].push(x);
+  });
+
+  return packages;
+}
+
 const SideMenu = () => {
   return (
     <div className="side-menu">
       <ul className="tree-view">
-        {getNamespaces().map((x, i) => {
-          return <MenuItem key={i} namespace={x} />;
+        {Object.keys(getPackages()).map(packageKey => {
+          return (<div key={packageKey}>
+            <h2>{packageKey}</h2>
+            <MenuItem cimPackage={getPackages()[packageKey]} />
+          </div>);
         })}
       </ul>
     </div>

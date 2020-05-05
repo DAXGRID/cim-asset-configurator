@@ -1,42 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const getNamespace = (x) => {
-  if (x.id && x.entities && x.entities.length > 0)
-    return <li><ul>{entities(x)}</ul></li>;
-}
-
-const entities = (namespace) => {
-  return namespace.entities.map((x, index) => {
-    let entities = [];
-    addNode(x, entities);
-    entities = entities.slice(1);
-
-    return (
-      <ul key={index}>
-        <li title={x.description} key={x.id}>{x.name}
-          <ul>{attributes(x)}</ul>
-          <ul>
-            {entities.map((x) => {
-              return entityElement(x);
-            })}
-          </ul>
-        </li>
-      </ul>
-    );
-  });
-}
-
-function addNode(node, nodes) {
-  nodes.push(node);
-  node.derivedEntities.forEach((x) => {
-    addNode(x, nodes);
-  });
-}
-
 const entityElement = (entity) => {
   return (
-    <li title={entity.description} key={entity.id}>{entity.name}
+    <li className="entity-title" title={entity.description} key={entity.id}>{entity.name}
       <ul>{attributes(entity)}</ul>
     </li>
   );
@@ -44,18 +11,22 @@ const entityElement = (entity) => {
 
 const attributes = (entity) => {
   return entity.attributes.map((x, i) => {
-    return <li title={x.description} key={i}>{x.name}</li>;
+    return <li className="entity-attribute" title={x.description} key={i}>{x.name}</li>;
   });
 }
 
-const MenuItem = ({ namespace }) => {
+const MenuItem = ({ cimPackage }) => {
   return (
-    <div>{getNamespace(namespace)}</div>
+    <div className="menu-item">
+      {cimPackage.map(x => {
+        return entityElement(x);
+      })}
+    </div>
   );
 }
 
 MenuItem.propTypes = {
-  namespace: PropTypes.object
+  cimPackage: PropTypes.array
 };
 
 export default MenuItem;
