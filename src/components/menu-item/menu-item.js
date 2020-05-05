@@ -10,18 +10,22 @@ const entities = (namespace) => {
   return namespace.entities.map((x, index) => {
     let entities = [];
     addNode(x, entities);
+    entities = entities.slice(1);
 
     return (
       <ul key={index}>
-        {entities.map((x) => {
-          return entityElement(x);
-        })}
+        <li title={x.description} key={x.id}>{x.name}
+          <ul>{attributes(x)}</ul>
+          <ul>
+            {entities.map((x) => {
+              return entityElement(x);
+            })}
+          </ul>
+        </li>
       </ul>
     );
   });
 }
-
-
 
 function addNode(node, nodes) {
   nodes.push(node);
