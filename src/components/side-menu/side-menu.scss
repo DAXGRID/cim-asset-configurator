@@ -4,6 +4,10 @@
         padding-left: 0;
         font-size: 14px;
 
+        h2 {
+            margin-bottom: 5px;
+        }
+
         li {
             &:hover {
                 cursor: pointer;

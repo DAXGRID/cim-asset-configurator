@@ -1,9 +1,25 @@
 .menu-item {
-    .entity-title {
-        font-weight: bold;
+    margin-left: 20px;
+    display: none;
+
+    .entity-element {
+        margin-bottom: 5px;
+
+        .attributes {
+            padding-left: 20px;
+        }
     }
 
+
     .entity-attribute {
-        font-weight: normal;
+        list-style: none;
+        padding: 2px 0px;
+        display: none;
+
+        .attribute-bullet {
+            color: rgb(36, 41, 46);
+            font-size: 8px;
+            margin-right: 5px;
+        }
     }
 }

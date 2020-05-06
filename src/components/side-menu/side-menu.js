@@ -1,5 +1,7 @@
 import React from 'react';
 import MenuItem from '../menu-item';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
@@ -80,11 +82,15 @@ const SideMenu = () => {
   return (
     <div className="side-menu">
       <ul className="tree-view">
-        {Object.keys(getPackages()).map(packageKey => {
-          return (<div key={packageKey}>
-            <h2>{packageKey}</h2>
-            <MenuItem cimPackage={getPackages()[packageKey]} />
-          </div>);
+        {Object.keys(getPackages()).map((packageKey) => {
+          return (
+            <div key={packageKey}>
+              <p>
+                <FontAwesomeIcon icon={faFolder} /> {packageKey}
+              </p>
+              <MenuItem cimPackage={getPackages()[packageKey]} />
+            </div>
+          );
         })}
       </ul>
     </div>
